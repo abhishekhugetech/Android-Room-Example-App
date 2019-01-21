@@ -1,13 +1,19 @@
 package com.epiclancers.authorbookapp;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_AUTHOR_NAME = "author_name";
     FloatingActionButton newBook;
     BookViewModel bookViewModel;
+    private BookListAdapter adapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +31,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         bookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+        setUpRecyclerView();
+        bookViewModel.arrayListLiveData.observe(this, new Observer<List<Book>>() {
+            @Override
+            public void onChanged(@Nullable List<Book> books) {
+                adapter.addNewBooks(books);
+            }
+        });
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerView);
+        adapter = new BookListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void init() {
