@@ -1,6 +1,8 @@
 package com.epiclancers.authorbookapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +21,15 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookVi
 
     List<Book> bookArrayList = new ArrayList<>();
     Context context;
+    public onDeleteClickListener onDeleteClickListener;
 
-    public BookListAdapter(Context context) {
+    public interface onDeleteClickListener{
+        void onDelete(Book book);
+    }
+
+    public BookListAdapter(Context context , onDeleteClickListener deleteClickListener) {
         this.context = context;
+        this.onDeleteClickListener = deleteClickListener;
     }
 
     @NonNull
@@ -63,14 +71,25 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookVi
             book_holder_card = itemView.findViewById(R.id.card_view);
         }
 
-        void setData(String authorName, String bookName, final int id, final int pos) {
+        void setData(final String authorName, final String bookName, final int id, final int pos) {
             author_name.setText(authorName);
             book_name.setText(bookName);
             position = pos;
             book_holder_card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: The Book Clicked at position " + pos );
+                    Intent intent = new Intent( context , EditTheBook.class );
+                    intent.putExtra(MainActivity.KEY_AUTHOR_NAME , authorName);
+                    intent.putExtra(MainActivity.KEY_BOOK_NAME , bookName);
+                    intent.putExtra(MainActivity.KEY_BOOK_ID , id);
+                    Activity activity = (Activity) context;
+                    activity.startActivityForResult( intent , MainActivity.UPDATE_NOTE );
+                }
+            });
+            delete_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onDeleteClickListener.onDelete(bookArrayList.get(pos));
                 }
             });
         }

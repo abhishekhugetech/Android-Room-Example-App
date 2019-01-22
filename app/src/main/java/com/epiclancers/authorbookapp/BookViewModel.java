@@ -29,11 +29,38 @@ public class BookViewModel extends AndroidViewModel {
         task.execute(book);
     }
 
+
+    public void updateBook(Book updatedbook) {
+        UpdateBookAsyncTask task = new UpdateBookAsyncTask();
+        task.execute(updatedbook);
+    }
+
+    public void deleteBook(Book book) {
+        DeleteBookAsyncTask task = new DeleteBookAsyncTask();
+        task.execute(book);
+    }
+
     public static class InsertBookAsyncTask extends AsyncTask<Book,Void,Void>{
 
         @Override
         protected Void doInBackground(Book... books) {
             bookDao.insertBook(books[0]);
+            return null;
+        }
+    }
+    public static class DeleteBookAsyncTask extends AsyncTask<Book,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Book... books) {
+            bookDao.delete(books[0]);
+            return null;
+        }
+    }
+    public static class UpdateBookAsyncTask extends AsyncTask<Book,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Book... books) {
+            bookDao.update(books[0]);
             return null;
         }
     }

@@ -12,14 +12,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BookListAdapter.onDeleteClickListener {
 
     public static final int NEW_NOTE = 1;
+    public static final int UPDATE_NOTE = 2;
     public static final String KEY_BOOK_NAME = "book_name";
     public static final String KEY_AUTHOR_NAME = "author_name";
+    public static final String KEY_BOOK_ID = "book_id";
     FloatingActionButton newBook;
     BookViewModel bookViewModel;
     private BookListAdapter adapter;
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new BookListAdapter(this);
+        adapter = new BookListAdapter(this , this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -66,8 +69,23 @@ public class MainActivity extends AppCompatActivity {
             Book book = new Book(bookName,authorName);
             bookViewModel.insertBook(book);
             Toast.makeText(this, "New Book Saved to Database", Toast.LENGTH_SHORT).show();
-        }else{
+        } else if (requestCode == UPDATE_NOTE && resultCode == RESULT_OK & data!= null){
+            String updatedbookName = data.getStringExtra(KEY_BOOK_NAME);
+            String updatedauthorName = data.getStringExtra(KEY_AUTHOR_NAME);
+            int updateId = data.getIntExtra(KEY_BOOK_ID , -1);
+            Book updatedbook = new Book(updateId,updatedbookName,updatedauthorName);
+            bookViewModel.updateBook(updatedbook);
+            Toast.makeText(this, "New Book Saved to Database " +updateId+ updatedauthorName + updatedbookName, Toast.LENGTH_SHORT).show();
+        }
+        else{
             Toast.makeText(this, "No Data Added", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDelete(Book book) {
+        String bookName = book.getBookName();
+        bookViewModel.deleteBook(book);
+        Toast.makeText(this, bookName + " deleted from Database", Toast.LENGTH_SHORT).show();
     }
 }

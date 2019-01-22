@@ -2,8 +2,10 @@ package com.epiclancers.authorbookapp;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,15 @@ import java.util.List;
 public interface BookDao {
 
     @Insert
-    public void insertBook(Book book);
+    void insertBook(Book book);
 
     @Query("SELECT * from books_table")
-    public LiveData<List<Book>> getBooks();
+    LiveData<List<Book>> getBooks();
+
+    @Update
+    void update(Book book);
+
+    @Delete
+    void delete(Book book);
 
 }

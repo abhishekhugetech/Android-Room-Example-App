@@ -40,4 +40,8 @@ public class NewBook extends AppCompatActivity {
         }
     }
 
+    public void cancel(View view){
+        finish();
+    }
+
 }

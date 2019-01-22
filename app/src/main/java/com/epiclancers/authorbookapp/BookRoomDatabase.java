@@ -12,7 +12,7 @@ public abstract class BookRoomDatabase extends RoomDatabase {
 
     public abstract BookDao bookDao();
 
-    public static BookRoomDatabase getInstance(Application context){
+    static BookRoomDatabase getInstance(Application context){
         if (INSTANCE == null){
             INSTANCE = Room.databaseBuilder( context.getApplicationContext() ,
                     BookRoomDatabase.class , "book_database")
@@ -20,7 +20,5 @@ public abstract class BookRoomDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-
-
 
 }

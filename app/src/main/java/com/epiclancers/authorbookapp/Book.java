@@ -20,6 +20,13 @@ public class Book {
         this.authorName = authorName;
     }
 
+    @Ignore
+    public Book(int id, String bookName, String authorName) {
+        this.id = id;
+        this.bookName = bookName;
+        this.authorName = authorName;
+    }
+
     public int getId() {
         return id;
     }
